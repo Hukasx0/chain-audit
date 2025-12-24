@@ -47,15 +47,6 @@ jobs:
           - target: linux-arm64
             bun-target: bun-linux-arm64
             artifact: chain-audit-linux-arm64
-          - target: darwin-x64
-            bun-target: bun-darwin-x64
-            artifact: chain-audit-darwin-x64
-          - target: darwin-arm64
-            bun-target: bun-darwin-arm64
-            artifact: chain-audit-darwin-arm64
-          - target: windows-x64
-            bun-target: bun-windows-x64
-            artifact: chain-audit-windows-x64.exe
 
     steps:
       - uses: actions/checkout@v4

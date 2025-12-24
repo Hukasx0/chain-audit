@@ -59,7 +59,17 @@ bun add -d chain-audit
 
 ### Single Executable (Standalone Binary)
 
-You can compile chain-audit to a standalone binary using Bun:
+> **Note:** In 99.99% of cases, `npm install -g chain-audit` is sufficient. Standalone executables are only for special cases where Node.js, npm, Bun, or other package managers are unavailable or installation is restricted.
+
+Pre-built standalone executables are available in the [GitHub Releases](https://github.com/hukasx0/chain-audit/releases) for Linux (x64 and ARM64). These are self-contained binaries that don't require Node.js or Bun to be installed.
+
+**Use cases for standalone executables:**
+- CI/CD environments without Node.js
+- Air-gapped systems
+- Systems with restricted installation permissions
+- Distribution to teams without package managers
+
+You can also compile chain-audit to a standalone binary yourself (For Linux, Windows and MacOS) using Bun:
 
 ```bash
 # Clone the repository
@@ -72,11 +82,6 @@ bun build src/index.js --compile --outfile chain-audit
 # Now you have a standalone binary
 ./chain-audit --help
 ```
-
-This creates a self-contained executable that doesn't require Node.js or Bun to be installed. Perfect for:
-- CI/CD environments without Node.js
-- Air-gapped systems
-- Distribution to teams without package managers
 
 ## Quick Start
 
