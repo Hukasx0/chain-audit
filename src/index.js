@@ -97,7 +97,6 @@ function run(argv = process.argv) {
       console.log(color('  severity', colors.cyan), '          - Filter to show only specific severity levels');
       console.log(color('  format', colors.cyan), '            - Output format: text, json, sarif');
       console.log(color('  verbose', colors.cyan), '           - Show detailed analysis');
-      console.log(color('  quiet', colors.cyan), '             - Suppress warnings');
       return { exitCode: 0 };
     } else {
       if (result.exists) {
@@ -239,7 +238,6 @@ ${color('OPTIONS:', colors.bold)}
                              • Trust score assessment
                              • False positive analysis hints
                              • Verification steps
-  -q, --quiet                Suppress warnings
   -v, --version              Print version
   -h, --help                 Show this help
   --init                     Generate example config file (.chainauditrc.json)

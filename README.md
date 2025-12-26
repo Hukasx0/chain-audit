@@ -127,7 +127,6 @@ chain-audit --verbose --json --scan-code
 | `--fail-on <level>` | Exit 1 if max severity >= level |
 | `--scan-code` | Deep scan JS files for suspicious patterns |
 | `-V, --verbose` | Show detailed analysis: code snippets with line numbers, matched patterns, package metadata, trust assessment, false positive hints, and verification steps |
-| `-q, --quiet` | Suppress warnings |
 | `-v, --version` | Print version |
 | `-h, --help` | Show help |
 | `--init` | Generate example config file (`.chainauditrc.json`) |
@@ -301,7 +300,6 @@ Alternatively, you can manually create a config file in your project root. Suppo
   "severity": ["critical", "high"],
   "format": "text",
   "verbose": false,
-  "quiet": false,
   "maxFileSizeForCodeScan": 1048576,
   "maxNestedDepth": 10
 }
@@ -320,7 +318,6 @@ Alternatively, you can manually create a config file in your project root. Suppo
 | `severity` | `string[]` | `null` | Show only specified severity levels (e.g., `["critical", "high"]`) |
 | `format` | `string` | `"text"` | Output format: `text`, `json`, or `sarif` |
 | `verbose` | `boolean` | `false` | Show detailed analysis with code snippets and trust scores |
-| `quiet` | `boolean` | `false` | Suppress warnings |
 | `maxFileSizeForCodeScan` | `number` | `1048576` | Max file size (bytes) to scan for code patterns |
 | `maxNestedDepth` | `number` | `10` | Max depth to traverse nested node_modules |
 

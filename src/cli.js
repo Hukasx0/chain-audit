@@ -53,7 +53,6 @@ function parseArgs(argv) {
     help: false,
     showVersion: false,
     scanCode: false,
-    quiet: false,
     verbose: false,
     init: false,
     force: false,
@@ -129,11 +128,6 @@ function parseArgs(argv) {
       case '--verbose':
       case '-V':
         args.verbose = true;
-        break;
-
-      case '--quiet':
-      case '-q':
-        args.quiet = true;
         break;
 
       case '--help':

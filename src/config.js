@@ -17,7 +17,6 @@ const DEFAULT_CONFIG = {
   severity: null,      // Array of severity levels to show (e.g., ['critical', 'high'])
   format: 'text',      // Output format: 'text', 'json', 'sarif'
   verbose: false,      // Show detailed analysis
-  quiet: false,        // Suppress warnings
   // Known legitimate packages with install scripts
   trustedPackages: [
     'esbuild',
@@ -128,9 +127,6 @@ function validateConfig(config) {
   if (config.verbose !== undefined && typeof config.verbose !== 'boolean') {
     throw new Error('Config: verbose must be a boolean');
   }
-  if (config.quiet !== undefined && typeof config.quiet !== 'boolean') {
-    throw new Error('Config: quiet must be a boolean');
-  }
 }
 
 /**
@@ -173,9 +169,6 @@ function mergeConfig(fileConfig, cliArgs) {
   if (fileConfig.verbose !== undefined) {
     config.verbose = fileConfig.verbose;
   }
-  if (fileConfig.quiet !== undefined) {
-    config.quiet = fileConfig.quiet;
-  }
 
   // Apply CLI arguments (highest precedence)
   config.nodeModules = cliArgs.nodeModules;
@@ -199,9 +192,6 @@ function mergeConfig(fileConfig, cliArgs) {
   }
   if (cliArgs.verbose) {
     config.verbose = true;
-  }
-  if (cliArgs.quiet) {
-    config.quiet = true;
   }
 
   return config;
@@ -234,7 +224,6 @@ function generateExampleConfig() {
     severity: ["critical", "high", "medium"],
     format: "text",
     verbose: false,
-    quiet: false,
     maxFileSizeForCodeScan: 1048576,
     maxNestedDepth: 10
   };
