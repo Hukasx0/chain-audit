@@ -130,6 +130,8 @@ chain-audit --verbose --json --scan-code
 | `-q, --quiet` | Suppress warnings |
 | `-v, --version` | Print version |
 | `-h, --help` | Show help |
+| `--init` | Generate example config file (`.chainauditrc.json`) |
+| `-f, --force` | Force overwrite existing config file (use with `--init`) |
 
 ## Severity Levels
 
@@ -255,7 +257,23 @@ Trust Assessment:
 
 ## Configuration
 
-Create a config file in your project root. Supported filenames (in priority order):
+### Initializing a Config File
+
+The easiest way to create a configuration file is to use the `--init` flag:
+
+```bash
+# Generate example config file (.chainauditrc.json)
+chain-audit --init
+
+# Overwrite existing config file
+chain-audit --init --force
+```
+
+This will create a `.chainauditrc.json` file in your project root with all available configuration options and example values.
+
+### Manual Configuration
+
+Alternatively, you can manually create a config file in your project root. Supported filenames (in priority order):
 - `.chainauditrc.json`
 - `.chainauditrc`
 - `chainaudit.config.json`

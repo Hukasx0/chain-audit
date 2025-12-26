@@ -55,6 +55,8 @@ function parseArgs(argv) {
     scanCode: false,
     quiet: false,
     verbose: false,
+    init: false,
+    force: false,
   };
 
   for (let i = 2; i < argv.length; i += 1) {
@@ -142,6 +144,15 @@ function parseArgs(argv) {
       case '--version':
       case '-v':
         args.showVersion = true;
+        break;
+
+      case '--init':
+        args.init = true;
+        break;
+
+      case '--force':
+      case '-f':
+        args.force = true;
         break;
 
       default:

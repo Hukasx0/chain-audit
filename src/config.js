@@ -207,8 +207,89 @@ function mergeConfig(fileConfig, cliArgs) {
   return config;
 }
 
+/**
+ * Generate example configuration file content
+ * @returns {string} JSON string with example configuration
+ */
+function generateExampleConfig() {
+  const exampleConfig = {
+    // Comment-like keys will be stripped in final output, but we use real JSON structure
+    ignoredPackages: [
+      "example-package-to-ignore",
+      "@scope/package-to-ignore",
+      "@types/*"
+    ],
+    ignoredRules: [
+      "native_binary"
+    ],
+    trustedPackages: [
+      "my-native-addon",
+      "my-build-tool"
+    ],
+    trustedPatterns: {
+      "custom-build-script": true
+    },
+    scanCode: false,
+    failOn: "high",
+    severity: ["critical", "high", "medium"],
+    format: "text",
+    verbose: false,
+    quiet: false,
+    maxFileSizeForCodeScan: 1048576,
+    maxNestedDepth: 10
+  };
+
+  return JSON.stringify(exampleConfig, null, 2);
+}
+
+/**
+ * Initialize a new configuration file in the specified directory
+ * @param {string} targetDir - Directory to create config file in
+ * @param {Object} options - Options for initialization
+ * @param {string} options.filename - Config filename (default: .chainauditrc.json)
+ * @param {boolean} options.force - Overwrite existing file
+ * @returns {Object} Result with success status and message
+ */
+function initConfig(targetDir, options = {}) {
+  const filename = options.filename || '.chainauditrc.json';
+  const force = options.force || false;
+  const configPath = path.join(targetDir, filename);
+
+  // Check if file already exists
+  if (fs.existsSync(configPath) && !force) {
+    return {
+      success: false,
+      message: `Configuration file already exists at ${configPath}. Use --force to overwrite.`,
+      path: configPath,
+      exists: true,
+    };
+  }
+
+  const content = generateExampleConfig();
+  
+  try {
+    fs.writeFileSync(configPath, content, 'utf8');
+    return {
+      success: true,
+      message: `Configuration file created at ${configPath}`,
+      path: configPath,
+      exists: false,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: `Failed to create configuration file: ${err.message}`,
+      path: configPath,
+      error: err,
+    };
+  }
+}
+
 module.exports = {
   loadConfig,
   mergeConfig,
+  initConfig,
+  generateExampleConfig,
   DEFAULT_CONFIG,
+  CONFIG_FILES,
 };

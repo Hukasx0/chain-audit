@@ -16,7 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const { parseArgs } = require('./cli');
-const { loadConfig, mergeConfig } = require('./config');
+const { loadConfig, mergeConfig, initConfig } = require('./config');
 const { buildLockIndex } = require('./lockfile');
 const { collectPackages } = require('./collector');
 const { analyzePackage } = require('./analyzer');
@@ -81,6 +81,32 @@ function run(argv = process.argv) {
   if (args.showVersion) {
     console.log(pkgMeta.version || 'unknown');
     return { exitCode: 0 };
+  }
+
+  if (args.init) {
+    const result = initConfig(process.cwd(), { force: args.force });
+    if (result.success) {
+      console.log(color('✓', colors.green), result.message);
+      console.log('\nConfiguration options:');
+      console.log(color('  ignoredPackages', colors.cyan), '  - Packages to skip during analysis (supports glob patterns)');
+      console.log(color('  ignoredRules', colors.cyan), '     - Rule IDs to ignore (e.g., "native_binary")');
+      console.log(color('  trustedPackages', colors.cyan), '  - Known legitimate packages with install scripts');
+      console.log(color('  trustedPatterns', colors.cyan), '  - Patterns that reduce severity for known use cases');
+      console.log(color('  scanCode', colors.cyan), '          - Enable deep JS file scanning (slower)');
+      console.log(color('  failOn', colors.cyan), '            - Exit 1 when max severity >= level');
+      console.log(color('  severity', colors.cyan), '          - Filter to show only specific severity levels');
+      console.log(color('  format', colors.cyan), '            - Output format: text, json, sarif');
+      console.log(color('  verbose', colors.cyan), '           - Show detailed analysis');
+      console.log(color('  quiet', colors.cyan), '             - Suppress warnings');
+      return { exitCode: 0 };
+    } else {
+      if (result.exists) {
+        console.log(color('⚠', colors.yellow), result.message);
+      } else {
+        console.error(color('✗', colors.red), result.message);
+      }
+      return { exitCode: result.exists ? 0 : 1 };
+    }
   }
 
   // Load and merge configuration
@@ -216,6 +242,8 @@ ${color('OPTIONS:', colors.bold)}
   -q, --quiet                Suppress warnings
   -v, --version              Print version
   -h, --help                 Show this help
+  --init                     Generate example config file (.chainauditrc.json)
+  -f, --force                Force overwrite existing config file (with --init)
 
 ${color('SEVERITY LEVELS:', colors.bold)}
   critical  Highly likely malicious (e.g., obfuscated code + network access)
