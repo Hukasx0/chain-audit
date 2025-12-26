@@ -48,3 +48,5 @@ test-results/
 tmp/
 temp/
 *.tmp
+
+.chainauditrc.json
