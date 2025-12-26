@@ -53,6 +53,9 @@ function formatText(issues, summary, context) {
     lines.push(`${color('lockfile type:', colors.dim)} ${context.lockfileType}`);
   }
   lines.push(`${color('packages scanned:', colors.dim)} ${context.packageCount}`);
+  if (context.severityFilter) {
+    lines.push(`${color('severity filter:', colors.dim)} ${context.severityFilter.join(', ')}`);
+  }
   if (context.failLevel) {
     lines.push(`${color('fail threshold:', colors.dim)} ${context.failLevel}`);
   }
@@ -95,7 +98,12 @@ function formatText(issues, summary, context) {
   lines.push(color('─'.repeat(60), colors.dim));
   lines.push(color('Summary:', colors.bold));
   
-  const summaryParts = SEVERITY_ORDER.map(level => {
+  // When severity filter is active, only show filtered levels in the order specified
+  const levelsToShow = context.severityFilter && context.severityFilter.length > 0
+    ? context.severityFilter
+    : SEVERITY_ORDER;
+  
+  const summaryParts = levelsToShow.map(level => {
     const count = summary.counts[level] || 0;
     if (count === 0) return `${level}: ${color('0', colors.dim)}`;
     return `${level}: ${color(String(count), getSeverityColor(level))}`;
@@ -132,6 +140,17 @@ function getSeverityColor(severity) {
  * Format issues as JSON
  */
 function formatJson(issues, summary, context) {
+  // When severity filter is active, only include filtered levels in summary counts
+  let summaryCounts;
+  if (context.severityFilter && context.severityFilter.length > 0) {
+    summaryCounts = {};
+    for (const level of context.severityFilter) {
+      summaryCounts[level] = summary.counts[level] || 0;
+    }
+  } else {
+    summaryCounts = summary.counts;
+  }
+
   const payload = {
     version: context.version || null,
     timestamp: new Date().toISOString(),
@@ -145,7 +164,7 @@ function formatJson(issues, summary, context) {
       path: issue.path,
     })),
     summary: {
-      ...summary.counts,
+      ...summaryCounts,
       total: issues.length,
       maxSeverity: summary.maxSeverity,
     },
@@ -154,6 +173,7 @@ function formatJson(issues, summary, context) {
       lockfile: context.lockfile,
       lockfileType: context.lockfileType || null,
       packageCount: context.packageCount,
+      severityFilter: context.severityFilter || null,
       failLevel: context.failLevel,
     },
   };
